@@ -1,0 +1,88 @@
+Comparaison des codes
+=====================
+
+Adage : sauf bonne raison, la lisibilité d'un programme ne doit
+        pas être sacrifiée
+
+Pourquoi beau.c est plus lisible que laid.c ?
+- on voit immédiatement qu'on manipule un tableau (utilisation des crochets)
+- on est moins perturbé qu'avec des '*' et des '**'
+
+Pourquoi l'argument suivant n'est pas recevable ?
+   "laid.c est mieux que beau.c car il est plus efficace !"
+- on fait des affichages à l'écran : le coût d'une addtion est négligeable
+- il est vraisemblable que le compilateur optimise mieux que le programmeur
+
+Règle de conduite : Avant de cochonner un code (i.e. produire un code
+     peu lisible) sous prétexe d'efficacité, il faut s'assurer que le
+     code a un réel impact négatif sur le temps d'exécution (utilisation
+     d'un profiler).
+
+
+
+Ne pas confondre booléen et entier/pointeur
+===========================================
+
+Voir les deux codes fournis (plus un 3me quasi-équivalent) aux étudiants
+
+Voici deux code faisant la même chose :
+
+Code correct :
+   char **p = env
+   while (*p != NULL)
+       p++;
+
+Code incorrect :
+   char **p = env
+   while (! *p)
+       p++;
+
+Le second code est choquant car l'opérateur de négation "!" s'applique
+à une valeur booléenne et non pas à un pointeur (ou une entier) pour
+lequel cela n'a aucun sens.
+
+En C ce qui n'est pas nul est vrai, mais :
+- ce n'est pas parce que le langage autorise d'écrire des horreurs
+  qu'il faut le faire
+- la seconde version est de toute façon moins lisible
+- et on oublie l'argument de l'efficacité : le compilateur compilera
+  les deux codes de la même façon.
+
+
+
+A méditer
+=========
+- les tableaux n'existent pas en C (enfin presque pas)
+
+Un tableau n'est qu'un pointeur sur la première case
+
+la notation '[]' n'est qu'une facilité d'écriture.
+  les deux instructions suivantes sont équivalentes
+      tab[i] = 30;
+      *(tab + i) = 30;
+  (mais la première est bien plus lisible que la seconde)
+
+Et de fait n ne peut pas faire d'affectation de tableaux (sauf dans un
+cas), éventuellement une affectation de pointeurs.
+
+
+
+
+Retour sur l'affectation de tableaux
+====================================
+
+Le seul cas que je connaisse pour affecter un tableau
+est lorsque le tableau est dans une structure et que le tableau
+n'est pas alloué dynamiquement :
+
+struct Tab
+{
+   int taille;
+   float tab[20];
+};
+struct Tab t1, t2;
+...
+t1 = t2;
+
+Et encore, c'est parce qu'il fait une copie mémoire sans se
+préoccuper si c'est un tableau ou non.

@@ -1,0 +1,7 @@
+Tapez :
+$ make
+pour avoir de l'aide sur la manière de compiler
+
+FIC : répertoire pour accueillir les fichiers créés par programme
+
+clfic : script pour vider le répertoire FIC

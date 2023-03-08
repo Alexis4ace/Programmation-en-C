@@ -1,0 +1,18 @@
+# Voici la liste des commandes demandées dans cet exercice
+
+echo "Bonjour"
+echo "Bonjour" > `tty`
+
+date
+echo `date`
+echo 'date'
+
+echo 'Bonjour $toto'
+echo "Bonjour $toto"
+echo 'Bonjour $USER'
+echo "Bonjour $USER"
+
+echo `Bonjour $USER`
+
+alias Bonjour='echo Bonjour'
+echo `Bonjour $USER`

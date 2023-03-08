@@ -1,0 +1,87 @@
+$ gcc -Wall -Wextra -pedantic -std=c99 -o afficheur afficheur.c
+$ ./afficheur 
+affichage avec printf
+affichage avec fprintf stdout
+affichage avec fprintf stderr
+Entrez un entier : 23
+L'entier est : 23
+
+# redirection ">" sur un fichier (inexistant en l'occurrence)
+$ ./afficheur > atuer
+affichage avec fprintf stderr
+23
+# le 23 a été tapé par l'utilisateur
+# tous les printf et fprintf(stdout) sont dans le fichier atuer
+# les fprintf(stderr) apparaissent à l'écran
+
+# redirection ">" sur /dev/null
+$ ./afficheur > /dev/null
+affichage avec fprintf stderr
+23
+# idem sauf que les affichages standard sont perdus
+# /dev/null est un "fichier" qui détruit tout ce qu'on écrit dedans
+
+# redirection > sur une commande
+$ ./afficheur > less
+$ s -lG
+total 44
+-rwxr-xr-x 1 subrenat 16976 août  10 18:05  afficheur
+-rw-r--r-- 1 subrenat   343 août   9 18:06  afficheur.c
+-rw-r--r-- 1 subrenat    89 août  10 18:08  atuer
+-rw-r--r-- 1 subrenat    89 août  10 18:09  less
+# En fait on crée le fichier "less"
+
+# redirection avec "2>"
+# idem que > si ce n'est qu'on inverse les redirections de la
+# sortie standard et de la sortie erreur
+
+# redirections ">" et "2>"
+$ ./afficheur > atuer.res 2> atuer.err
+23
+# le 23 a été tapé par l'utilisateur
+# rien n'apparait à l'écran, les sorties standard et erreur
+# ont été dispatchées dans les deux fichiers
+
+# redirection "|" sur un fichier
+* ./afficheur | atuer
+affichage avec fprintf stderr
+atuer : commande introuvable
+./afficheur | ./atuer
+bash: ./atuer: Permission non accordée
+# | sur un fichier n'a aucun sens, il faut une commande
+# dans le premier cas la commande "atuer" n'est pas trouvée (pas dans le PATH)
+# dans le second cas, "atuer" et lancé comme un exécutable, mais ce n'en est
+# pas un
+
+# redirection "|" sur une commande
+$ ./afficheur | less
+# note : dans le cas présent, cette redirection n'a aucun intérêt fonctionnel
+# il faut taper le nombre à l'aveugle
+
+$ ls > result | less
+# tout l'affichage standard du "ls" est envoyé dans le fichier, donc
+# il ne reste rien pour la commande "less", autant l'enlever
+
+$ ls  | less > result
+# c'est la sortie de less qui est redirigée. Or l'intérêt de less est
+# est de faire du page à page à l'écran ; donc autant rediriger
+# directement la sortie de "afficheur"
+
+$ ls 2> erreurs | less
+# on élimine les messages d'erreur de l'écran pour ne paginer que les
+# messages normaux
+
+$ ls > result 2> erreurs
+$ ls 2> erreurs > result
+# à ma connaissance, il n'y a aucune différence entre les deux commandes.
+# et j'espère qu'il n'y en a pas, sinon il faudra être convaincant
+# pour me convaincre (d'ailleurs généralement il vaut mieux être
+# convaincant pour convaincre quelqu'un)
+
+
+# rediriger la sortie erreur dans un tube
+# voici une commande un peu ésotérique
+$ ./afficheur 2>&1 > /dev/null | wc -l
+# "wc -l" compte les lignes et n'en compte qu'une, celle de stderr
+# et pour être dégueux jusqu'au bout et avoir la sortie standard à l'écran :
+$ ./afficheur 2>&1 > `tty` | wc -l

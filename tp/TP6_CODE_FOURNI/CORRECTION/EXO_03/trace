@@ -1,0 +1,61 @@
+========================================================================
+partie a)
+=========
+
+EXO_03$ mkfifo montube
+EXO_03$ ls -l
+prw-r--r-- 1 subrenat subrenat   0 oct.   7 14:20 montube
+EXO_03$
+
+On note le "p" au lieu du "-" habituel pour dire que c'est un
+tube nommé (names pipe).
+La taille n'est pas pertinente, ce n'est pas un fichier même si on en
+a l'impression
+
+
+
+========================================================================
+partie b) et c)
+===============
+
+console 1 :
+EXO_03$ cat < montube 
+aaaaaaa           <- temps  2
+ccccccc           <- temps  6
+eeeeeee           <- temps 10
+ggggggg           <- temps 14
+iiiiiii           <- temps 18
+kkkkkkk           <- temps 22
+EXO_03$
+
+console 2 :
+EXO_03$ cat < montube 
+bbbbbbb           <- temps  4
+ddddddd           <- temps  8
+fffffff           <- temps 12
+hhhhhhh           <- temps 16
+jjjjjjj           <- temps 20
+lllllll           <- temps 24
+EXO_03$
+
+console 3 :
+EXO_03$ cat > montube 
+aaaaaaa           <- temps  1
+bbbbbbb           <- temps  3
+ccccccc           <- temps  5
+ddddddd           <- temps  7
+eeeeeee           <- temps  9
+fffffff           <- temps 11
+ggggggg           <- temps 13
+hhhhhhh           <- temps 15
+iiiiiii           <- temps 17
+jjjjjjj           <- temps 19
+kkkkkkk           <- temps 21
+lllllll           <- temps 23
+EXO_03$ ls -l
+prw-r--r-- 1 subrenat subrenat   0 oct.   7 14:35 montube
+EXO_03$
+
+On remarque que les deux lecteurs prennent à tour de rôle une ligne
+envoyée par l'écrivain. Mais en aucun cas on ne peut compter sur
+cette régularité.

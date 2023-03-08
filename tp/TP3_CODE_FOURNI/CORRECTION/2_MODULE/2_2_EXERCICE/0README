@@ -1,0 +1,15 @@
+Pour compiler un .o:
+$ make main.o
+et
+$ make ImageMono.o
+
+Pour générer l'exécutable :
+$ make
+ou
+$ make all
+
+Pour supprimer les fichiers intermédiaire (.o et .d)
+$ make clean
+
+Pour supprimer les fichiers intermédiaire (.o et .d) et l'exécutable
+$ make distclean

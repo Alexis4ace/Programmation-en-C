@@ -1,0 +1,6 @@
+Si on compile, il y a une erreur de redéfinition du type "struct Vecteur"
+
+avec :
+$ gcc -E main.c
+on voit bien que la définition de "struct Vecteur" y est deux fois
+à cause de la double inclusion.

@@ -1,0 +1,11 @@
+Au fait, pourquoi définir une constante static dans une
+fonction n'a pas d'intérêt ?
+
+L'intérêt d'une variable static locale est que la valeur est
+conservée entre deux appels.
+Mais si la valeur ne change jamais, autant faire une constante normale. On
+aura le même résultat et on ne se demandera pas pourquoi on a utilisé
+une variable static.
+
+En revanche une constante static mise au niveau du fichier est
+intéressante : la constante n'est pas visible de l'extérieur du fichier.

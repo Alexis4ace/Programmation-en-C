@@ -1,0 +1,5 @@
+Pour le couple motif.h/motif.c, vous n'avez besoin que de motif.h
+(ce qui ne vous empêche pas de regarder motif.c si vous être curieux)
+
+Compilation ;
+$ gcc -g -Wall -Wextra -pedantic -std=c99 motif.c exo_11_05.c -o exo_11_05

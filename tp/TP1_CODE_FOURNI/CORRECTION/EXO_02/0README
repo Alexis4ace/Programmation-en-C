@@ -1,0 +1,166 @@
+Quelques exemples
+=================
+
+1) liens symboliques
+   =================
+
+Lien symbolique : principe du raccourci sous Windows
+
+création d'un fichier classique
+$ gedit origine
+$ ls -lG
+-rw-r--r-- 1 subrenat 14 2022-08-09 20:38 origine
+$ cat origine 
+Hello monde !
+
+création d'un lien symbolique sur le fichier "origine"
+$ ln -s origine liensymb
+$ ls -lG
+lrwxrwxrwx 1 subrenat   7 2022-08-09 20:40  liensymb -> origine
+-rw-r--r-- 1 subrenat  14 2022-08-09 20:38  origine
+
+Deux noms pour accéder au même fichier :
+$ echo "Bye Bye" >> liensymb 
+$ cat origine 
+Hello monde !
+Bye Bye
+
+Supprimer le lien laisse intact le fichier d'origine (heureusement)
+
+Suprimer le fichier d'origine rend le lien incohérent (sorte d'erreur 404)
+$ rm origine
+$ ls -lG
+-rw-r--r-- 1 subrenat 742 2022-08-09 20:44 0README
+lrwxrwxrwx 1 subrenat   7 2022-08-09 20:40 liensymb -> origine
+$ cat liensymb 
+cat: liensymb: Aucun fichier ou dossier de ce type
+
+Note : un lien symbolique peut :
+- désigner un répertoire
+- désigner une entité sur une autre partition
+
+
+
+2) liens durs (hard link)
+   ======================
+
+hard link : permet de donner plusieurs noms à un fichier et il n'y a pas
+de différence entre le fichier origine et le lien (il n'y a aucun
+moyen de savoir qui est l'origine et qui est le lien)
+
+Analogie de la pièce :
+- au départ : une pièce avec une porte et un numéro dessus (le nom d'origine)
+- le lien dur revient a mettre une deuxième porte avec un autre numéro
+=> deux numéros pour la même pièce
+=> aucune différence entre les deux portes
+=> on ne sait pas quelle était la porte d'origine
+=> condamner (effacer) une porte n'empêche pas d'accéder à la pièce par
+   l'autre porte
+
+création d'un fichier classique
+$ gedit origine
+$ ls -lG
+-rw-r--r-- 1 subrenat  12 2022-08-09 20:59 origine
+$ cat origine 
+Hallo welt!
+
+Création d'un lien dur sur origine (en restant dans le même répertoire)
+$ ln origine liendur
+$ ls -lG
+-rw-r--r-- 2 subrenat   12 2022-08-09 20:59  liendur
+-rw-r--r-- 2 subrenat   12 2022-08-09 20:59  origine
+On remarque le "2" à gauche du nom du propriétaire : on en déduit
+que "origine" et "liendur" ont chacun deux noms, mais on ne peut
+savoir a priori si tous les deux sont liés.
+
+"origine" et "liendur" sont-ils le même fichier ?
+$ ls -ilG
+272310 -rw-r--r-- 1 subrenat 2181 2022-08-09 20:59  0README
+272306 -rw-r--r-- 2 subrenat   12 2022-08-09 20:59  liendur
+272306 -rw-r--r-- 2 subrenat   12 2022-08-09 20:59  origine
+On affiche l'identifiant système des fichiers (inode) et on s'aperçoit
+que "origine" et "liendur" ont le même, ce sont donc physiquement
+les mêmes fichiers.
+
+Deux noms pour accéder au même fichier :
+$ echo "Tchüss" >> liendur 
+$ cat origine 
+Hallo welt!
+Tchüss
+
+Pour supprimer un fichier, il faut supprimer tous ses noms
+$ rm origine 
+$ ls -lG
+-rw-r--r-- 1 subrenat   20 2022-08-09 21:25  liendur
+# le "2" s'est changé en "1"
+$ cat liendur 
+Hallo welt!
+Tchüss
+
+Note :
+- le "lien" n'est pas obligatoirement dans le même répertoire que l'origine
+- un lien dur ne peut pas désigner un répertoire
+- un lien dure ne peut pas désigner une entité d'une autre partition
+$ ln /bin/a2ps liendur
+ln: impossible de créer le lien direct 'liendur' → '/bin/a2ps': Lien physique inter-périphérique invalide
+
+
+
+
+3) mkdir
+   =====
+
+Que fait cette commande :
+$ mkdir /tmp/toto/tutu/titi
+?
+
+Et cette commande :
+$ mkdir -p /tmp/toto/tutu/titi
+?
+
+
+
+
+4) chmod
+   =====
+
+Quelques remarques
+
+"w" pour un fichier indique si on a le droit ou non de le modifier.
+Attention cela ne concerne pas le droit d'effacer ou non le fichier : pour
+cela c'est l'attribut "w" du répertoire.
+
+Cas 1
+$ ls -alG
+drwxr-xr-x 2 subrenat 4096 2022-08-09 21:39 ./
+drwxr-xr-x 3 subrenat 4096 2022-08-09 21:39 ../
+-r--r--r-- 1 subrenat    3 2022-08-09 21:39 fichier
+# on ne peut pas modifier le fichier (pas de "w" pour le fichier)
+$ echo "bonjour" > fichier 
+bash: fichier: Permission non accordée
+# mais on peut le supprimer (un "w" pour le répertoire)
+$ rm fichier 
+rm : supprimer 'fichier' qui est protégé en écriture et est du type « fichier » ? y
+$ ls -alG
+total 8
+drwxr-xr-x 2 subrenat 4096 2022-08-09 21:41 ./
+drwxr-xr-x 3 subrenat 4096 2022-08-09 21:39 ../
+
+Cas 2
+$ ls -alG
+dr-xr-xr-x 2 subrenat 4096 2022-08-09 21:47 ./
+drwxr-xr-x 3 subrenat 4096 2022-08-09 21:39 ../
+-rw-r--r-- 1 subrenat    3 2022-08-09 21:47 fichier
+# on ne peut pas effacer le fichier (pas de "w" pour le répertoire)
+$ rm fichier 
+rm: impossible de supprimer 'fichier': Permission non accordée
+# mais on peut le modfier
+$ echo "aa" >> fichier 
+
+
+Un "x" pour un répertoire signifie qu'on a le droit de le
+traverser, c'est à dire d'aller dans ses sous-répertoire.
+
+
+le "setuid" bit permet d'exécuter un exécutable avec ldes droits de son
+propriétaire au lieu

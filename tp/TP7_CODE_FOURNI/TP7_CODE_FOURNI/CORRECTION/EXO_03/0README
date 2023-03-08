@@ -1,0 +1,72 @@
+a)
+$ ipcs -s
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
+0x3c81b7f6 32768      subrenat   666        1         
+
+donc j'ai un sémaphore qui traine et mieux vaut ne pas y toucher
+Qui l'utilise ? Firefox ? Thunderbird ? Aucune idée en fait.
+
+
+
+b)
+$ ./exo3b
+$ ipcs -s
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
+0x3c81b7f6 32768      subrenat   666        1         
+0x00000000 65537      subrenat   641        2
+
+On a bien la deuxième ligne avec les bonnes permissions
+et le bon nombre de sémaphores
+
+$ ipcrm -s 65537
+$ ipcs -s
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
+0x3c81b7f6 32768      subrenat   666        1
+
+et tout est ok
+
+
+
+c)
+$ ./exo3b
+$ ./exo3b
+$ ./exo3b
+$ ipcs -s
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
+0x3c81b7f6 32768      subrenat   666        1         
+0x00000000 98305      subrenat   641        2         
+0x00000000 131074     subrenat   641        2         
+0x00000000 163843     subrenat   641        2         
+$ ../rmsem.sh
+$ ipcs -s
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
+0x3c81b7f6 32768      subrenat   666        1        
+
+Note, on aurait pu utiliser la commande :
+$ ipcrm -s 98305 -s 131074 -s 163843
+ou encore la boucle :
+$ for i in 98305 131074 163843
+> do
+> ipcrm -s $i
+> done
+
+
+
+d)
+$ ipcs -s
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
+0x3c81b7f6 32768      subrenat   666        1         
+$ ./exo3d
+$ ./exo3d
+$ ./exo3d
+$ ipcs -s
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
+0x3c81b7f6 32768      subrenat   666        1         
+

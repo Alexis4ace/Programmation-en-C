@@ -1,0 +1,2 @@
+Il suffit de jouer sur les redirections pour faire une copie de fichier :
+$ ./relais < source > target

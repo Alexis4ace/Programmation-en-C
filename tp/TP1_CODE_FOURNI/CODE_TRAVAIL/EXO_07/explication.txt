@@ -1,0 +1,21 @@
+Pour créer ou changer une variable d'environnement dans le shell,
+la syntaxe est la suivante :
+$ VAR1=valeur
+
+Il ne faut pas d'espace de part et d'autre du signe '='
+
+Par exemple :
+$ AGE=20
+$ SURNOM="Warrior Of Web"
+
+
+Mais des variables définies ainsi ne sont pas accessibles
+par les programmes C (et les commandes unix externes en général) ;
+vraisemblablement pour ne pas encombrer la mémoire des processus.
+
+Pour rendre une variable d'environnement visible d'un programme C, il
+faut l'exporter :
+- soit dès la création, par exemple :
+     $ export VILLE=Poitiers
+- soit après coup, par exemple :
+     $ export AGE

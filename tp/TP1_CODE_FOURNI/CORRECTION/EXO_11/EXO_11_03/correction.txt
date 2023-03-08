@@ -1,0 +1,22 @@
+$ gcc -g -Wall -Wextra -pedantic -std=c99 exo_11_03.c -o exo_11_03
+exo_11_03.c: In function ‘main’:
+exo_11_03.c:11:64: error: lvalue required as unary ‘&’ operand
+   11 |     printf("l'adresse de l'adresse de i vaut : %p\n", (void *) &(&i));
+      |                                                                ^
+
+
+'&' renvoie l'adresse d'une variable.
+
+&i : est donc l'adresse de i, c'est à dire un nombre ; pas de soucis
+     Disons que ça vaut 587459 pour illustrer.
+
+&(&i) : est donc équivalent à &587459.
+        on ne peut prendre l'adresse d'un nombre (i.e. quelque chose
+	qui n'est pas une lvalue) puisqu'il n'est stocké nulle part.
+
+
+En revanche le code suivant est correct car on passe par une
+seconde variable :
+int i = 5;
+int *pi = &i;
+printf("l'adresse du pointeur pi vaut : %p\n", (void *) &pi);

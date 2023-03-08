@@ -1,0 +1,18 @@
+$ FOO=13
+$ ./affiche_env FOO
+la variable FOO n'existe pas.
+# par défaut les variables du shell ne sont pas visibles
+# par les programmes C
+# pour cela il faut qu'elles soit exportées
+
+$ export BAR=15
+$ ./affiche_env BAR
+la variable BAR vaut >>15<<.
+# et la variable est alors visible
+
+# Mais la variable BAR n'est pas visible  dans une autre console car
+# les définitions sont locales à la console où la commande a été tapée.
+
+# Pour rendre la variable permanente, il faut faire le "export BAR=15"
+# dans le fichier ~/.bashrc (qui est lu chaque fois qu'on lance une
+# console

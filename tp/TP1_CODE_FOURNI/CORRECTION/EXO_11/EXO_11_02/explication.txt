@@ -1,0 +1,58 @@
+Attention les description ci-dessous sont issues d'exécutions sur
+ma machine. Rien de dit que vous aurez le même comportement.
+Règle : quand on programme est faux, on se présuppose pas
+        son comportement, mais on le corrige;
+
+Cas du pointeur non initialisé dans le main :
+$ ./exo_11_02_main 
+Le pointeur non initialisé vaut (nil)
+Erreur de segmentation (core dumped)
+# - le pointeur non initialisé est mis à NULL maos il ne faut
+#   pas compter dessus, la valeur pourrait être aléatoire (il n'y a
+#   que pour les variables globales qu'il y a des règles d'initialisation
+#   par défaut)
+# - l'accès à la zone pointée plante : il est interdit d'écrire ou de
+#   lire à l'adresse 0. Et donc le programme s'arrête.
+
+Cas du pointeur non initialisé dans une fonction :
+$ ./exo_11_02_fonction 
+Le pointeur non initialisé vaut 0x5580e5b0b080
+Dans la zone pointée il y a -98693133
+Passe-t-on par là ?
+# - le pointeur est initialisée à une valeur aléatoire
+# - et à cette adrese il y a également une valeur aléatoire
+# - attention c'est de la chance (ou de la malchance) qu'on ait
+#   le droit de lire à cette adresse, on aurait aussi pu avoir un
+#   "segmentation fault"
+# - la probabilité de pouvoir écrire à une adresse aléatoire est
+#   plus faible que d'avoir le droit de lire. Un accès en écriture
+#   conduirait vraisemblablement à un "segmentation fault"
+
+Bien entendu, on n'utilise jamais une variable non initialisée (si ce
+n'est pour l'initialiser).
+
+
+
+Pour info, voici le résultat de valgrind :
+$ valgrind ./exo_11_02_main 
+==6092== Memcheck, a memory error detector
+==6092== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==6092== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==6092== Command: ./exo_11_02_main
+==6092== 
+==6092== Conditional jump or move depends on uninitialised value(s)
+==6092==    at 0x48D9A82: __vfprintf_internal (vfprintf-internal.c:1687)
+==6092==    by 0x48C3D3E: printf (printf.c:33)
+==6092==    by 0x10918C: main (exo_11_02_main.c:13)
+==6092== 
+Le pointeur non initialisé vaut (nil)
+==6092== Use of uninitialised value of size 8
+==6092==    at 0x109191: main (exo_11_02_main.c:14)
+==6092== 
+==6092== Invalid read of size 4
+==6092==    at 0x109191: main (exo_11_02_main.c:14)
+==6092==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==6092== 
+==6092== ...
+# il est dit (même si cette histoire de jump est surprenante) qu'on utilise
+# une valeur non inialisée à la ligne 13 de main.c

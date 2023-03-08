@@ -1,0 +1,62 @@
+# recopier le répertoire dans un répertoire vide
+$ mkdir TOTO
+$ cd TOTO
+$ cp -R <chemin vers le répertoire>/PROJET_TEST .
+
+# archive non compressée
+$ tar cf projet.tar PROJET_TEST
+$ s -lG
+drwxr-xr-x 4 subrenat   4096 août  10 17:37 PROJET_TEST
+-rw-r--r-- 1 subrenat 163840 août  10 17:39 projet.tar
+$ du -hs *
+176K	PROJET_TEST
+160K	projet.tar
+# les tailles sont comparables : c'est logique car il n'y a pas de compresion
+
+# on la déplace dans un répertoire vide
+$ mkdir MANIP
+$ cd MANIP
+$ mv ../projet.tar .
+
+# on désarchive
+$ tar xf projet.tar 
+$ ls
+PROJET_TEST/  projet.tar
+# on supprime le répertoire (pas l'archive)
+$ rm -Rf PROJET_TEST
+
+# taille avant compression
+$ ls -lh projet.tar 
+-rw-r--r-- 1 subrenat subrenat 160K août  10 17:39 projet.tar
+# compression
+$ bzip2 -9 projet.tar
+# taille après compression
+$ ls -lh projet.tar.bz2 
+-rw-r--r-- 1 subrenat subrenat 98K août  10 17:39 projet.tar.bz2
+# désarchivage en une seule commande
+$ tar jxf projet.tar.bz2
+
+# aller dans le répertoire SOURCE
+$ cd PROJET_TEST/SOURCE
+$ ls *.c
+glopglop.c  pasglop.c  toto.c
+# création des sommes de contrôle
+$ md5sum *.c > verif
+$ cat verif 
+15de91a075434f61795d3a3f5c1c8cce  glopglop.c
+63b3e2d0b4f9ff38714e524a0405629e  pasglop.c
+7d7ba68bf9d9845327aadc2a9558d717  toto.c
+
+# vérification des sommes de contrôle
+$ md5sum -c verif 
+glopglop.c: Réussi
+pasglop.c: Réussi
+toto.c: Réussi
+
+# on modifie toto.c et on revérifie
+$ md5sum -c verif 
+glopglop.c: Réussi
+pasglop.c: Réussi
+toto.c: Échec
+md5sum: Attention : 1 somme de contrôle ne correspond pas
+q

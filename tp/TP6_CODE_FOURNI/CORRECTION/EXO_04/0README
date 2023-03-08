@@ -1,0 +1,35 @@
+Ouverture/fermeture d'un tube
+=============================
+
+L'ouverture d'un tube nommé est bloquante tant qu'un autre processus
+ne fait pas une ouverture de l'autre côté :
+- une ouverture en écriture bloque tant qu'un processus ne fait pas une
+  ouverture en lecture
+- vice-versa
+Voici une ligne temporaelle :
+Proc1                             Proc2
+|                                 |
+open(tube, lecture)               |
+.                                 |
+.                                 |   // fait autre chose
+.  // bloqué sur open             |
+.                                 |
+.                                 |
+.                                 open(tube, écriture)
+|  // continue le code            |   // continue le code
+|                                 |
+
+
+
+Suppression d'un tube nommé
+===========================
+
+Si on efface un tube (via le système de fichier "rm" ou par
+programme "unlink") alors que d'autres programmes
+l'utilisent, il ne se passe rien.
+Le tube n'est plus visible avec la commande "ls" mais il
+existe toujours : sa suppression ne sera effective que lorsque
+tous les programmes utilisant le tube auront cesser de le faire.
+
+cf. "man 2 unlink"
+

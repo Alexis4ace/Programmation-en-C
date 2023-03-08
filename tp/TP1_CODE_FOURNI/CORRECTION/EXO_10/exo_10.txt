@@ -1,0 +1,66 @@
+Antiquote :
+Une chaine entre antiqotes :
+- est considéré comme une commande bash
+- est exécutée
+- est remplacée par l'affichage qu'elle produit
+Voici un exemple typique :
+- on veut stocker dans la variable shell NOW la date courante
+- on veut utiliser la commande "date"
+- mais cette commande affiche la date à l'écran
+- note : une redirection ne marche pas car le résultat serait mis
+  dans un fichier et non dans une variable
+- solution : antiquotes
+    $ NOW=`date -d "10 seconds"`
+    $ echo $NOW
+    jeu. 11 août 2022 11:21:26 CEST
+    $ date
+    jeu. 11 août 2022 11:21:20 CEST
+    
+
+
+$ echo "Bonjour"
+$ echo "Bonjour" > `tty`
+# Les deux commandes affichent "Bonjour"
+# La première commande ne pose pas de problème
+# La commande avec les anti-quotes :
+#   - `tty` est remplacé par l'affichage que fait
+#     la commande (/dev/pts/2 chez moi)
+#   - conc on redirige la sortie standard sur la console courante
+#     (pourquoi faire simple quand on peut faire compliqué)
+#   - et donc les deux commandes produisent le même résultat.
+
+
+$ date
+jeu. 11 août 2022 11:25:28 CEST
+$ echo `date`
+date
+$ echo 'date'
+jeu. 11 août 2022 11:25:40 CEST
+# ça illustre de façon plus soft le cas précédant
+# mais encore une fois c'est se compliquer la vie pour rien
+# (cf. début du fichier pour une utilisation intéressante)
+
+$ echo 'Bonjour $toto'
+Bonjour $toto
+$ echo "Bonjour $toto"
+Bonjour 
+$ echo 'Bonjour $USER'
+Bonjour $USER
+$ echo "Bonjour $USER"
+Bonjour subrenat
+# Pour illuster qu'entre guillemets les variables sont remplacées
+# par leurs contenus, mais pas avec les quotes
+# Donc il est un peu plus efficace d'afficher une chaine entre quotes
+# plutôt qu'entre guillemets.
+
+$ echo `Bonjour $USER`
+Bonjour : commande introuvable
+# parce la chaîne entre antiquotes est comprise comme une
+# instruction bash et donc  lance la commande "Bonjour" qui
+# a peu de chance d'exister
+
+$ alias Bonjour='echo Bonjour'
+$ echo `Bonjour $USER`
+Bonjour subrenat
+# En revanche ici on crée (artificiellement) la commande "Bonjour"
+# (même si c'est via un alias) qui peut donc être lancée.

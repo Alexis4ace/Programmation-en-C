@@ -1,0 +1,3 @@
+Les seuls intérêts de cet exercice :
+- l'affichage n'est pas dans la fonction mais bien dans le main
+- ne pas faire plus que ce qui est demandé

@@ -1,0 +1,24 @@
+Pourquoi include "toto.h" dans "toto.c" ?
+- si toto.h définit un type il est sûrement utilisé dans toto.c et
+  donc l'inclusion est obligatoire
+- si ce n'est pas le cas, il faut le faire tout de même (par exemple
+  pour le module operation). En effet dans le .h on écrit le prototype
+  des fonctions ; dans le .c on le réécrit avec le corps.
+  Donc il y a duplication de code. En incluant le .h, le compilateur
+  vérifie que les deux prototypes sont cohérents.
+
+Module operation :
+C'est l'application directe de toutes les explications du TP : extern,
+un petit static, .h/c et interface publique, ...
+
+Module comptes :
+- Le strict minimum dans le .h, et donc surtout pas la structure de données
+- Je préfère les "const int" aux #define car ainsi la constante est typée
+- Pourquoi la fonction d'initialisation des comptes bancaires n'est
+  pas accessible par l'utilisateur du module ?
+  . comme c'est dit dans le code, il pourrait oublier de l'appeler
+  . ou pire il pourrait l'appeler en plein milieu du code (remarquez
+    que c'est pratique si on est à découvert)
+  . on part toujours du principe que l'utilisateur du module est
+    capable de faire n'importe quoi et il faut l'en empêcher.
+ 
